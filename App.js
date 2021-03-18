@@ -7,6 +7,7 @@ import {
   ToastAndroid,
 } from 'react-native';
 import {BLEPrinter, USBPrinter} from 'react-native-printer';
+import {Picker} from '@react-native-picker/picker';
 
 export default function App() {
   // states
@@ -14,6 +15,7 @@ export default function App() {
   const [currentBluetoothPrinter, setCurrentBluetoothPrinter] = useState();
   const [usbPrinters, setUsbPrinters] = useState([]);
   const [currentUsbPrinter, setCurrentUsbPrinter] = useState();
+  const [selectedLanguage, setSelectedLanguage] = useState();
 
   // on component did mount
   useEffect(() => {
@@ -78,6 +80,10 @@ export default function App() {
     thanks,
     numberOfCopies,
   ) => {
+    if (numberOfCopies <= 0) {
+      console.warn('numberOfCpise must be over 1!');
+      return;
+    }
     const line = '<C>--------------------------------------------</C>\n';
     const date = new Date().toLocaleString('fr-fr');
     for (let i = 0; i < numberOfCopies; i++) {
@@ -222,13 +228,26 @@ export default function App() {
                 '5600', // total
                 '1125', // ticketNumber
                 'Merci pour votre achat', // thanks
-                3,
+                0,
               )
             }>
             <Text style={{color: 'white', fontSize: 30}}>
               Print Sample Bill
             </Text>
           </TouchableOpacity>
+          <View
+            style={{
+              backgroundColor: 'white',
+            }}>
+            <Picker
+              selectedValue={selectedLanguage}
+              onValueChange={(itemValue, itemIndex) =>
+                setSelectedLanguage(itemValue)
+              }>
+              <Picker.Item label="bluetooth" value="bluetooth" />
+              <Picker.Item label="usb" value="usb" />
+            </Picker>
+          </View>
         </View>
       </View>
     </View>
