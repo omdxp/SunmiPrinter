@@ -86,7 +86,8 @@ export default function App() {
           `<CM>${address}</CM>\n` +
           `<CM>${phoneNumber}</CM>\n` +
           line +
-          `${productsList.map(product => `* ${product} DA\n`)}` +
+          ',' +
+          productsList.map(product => '* ' + product + ' DA\n') +
           line +
           `Collected Amount : ${collectedAmount} DA\n` +
           `Discount : ${discount} DA\n` +
@@ -97,7 +98,17 @@ export default function App() {
           `${date}\n` +
           `<CM>${thanks}</CM>\n`,
       );
+      sleep(1000);
     }
+  };
+
+  // function to sleep for a specefic time
+  const sleep = milliseconds => {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
   };
 
   return (
@@ -211,7 +222,7 @@ export default function App() {
                 '5600', // total
                 '1125', // ticketNumber
                 'Merci pour votre achat', // thanks
-                1,
+                3,
               )
             }>
             <Text style={{color: 'white', fontSize: 30}}>
