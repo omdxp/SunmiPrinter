@@ -315,13 +315,6 @@ export default function App() {
               justifyContent: 'center',
             }}
             onPress={() => {
-              switch (selectedDeviceType) {
-                case 'Bluetooth':
-                  break;
-
-                default:
-                  break;
-              }
               selectedDeviceType === 'Bluetooth'
                 ? printBluetoothBillSample(
                     'Omar Store', // storeName
