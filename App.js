@@ -351,7 +351,7 @@ export default function App() {
                     '5600', // total
                     '1125', // ticketNumber
                     'Merci pour votre achat', // thanks
-                    1, // numberOfCopies
+                    2, // numberOfCopies
                   );
             }}>
             <Text style={{color: 'white', fontSize: 30}}>
