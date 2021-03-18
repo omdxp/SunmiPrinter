@@ -32,7 +32,13 @@ export default function App() {
   // refresh bluetooth devices
   const refreshBluetoothDevices = () => {
     BLEPrinter.init().then(() => {
-      BLEPrinter.getDeviceList().then(setBluetoothPrinters);
+      BLEPrinter.getDeviceList().then(res => {
+        setBluetoothPrinters(res);
+        // auto connect to first available bluetooth printer when app is loading
+        if (res.length !== 0) {
+          connectBluetoothPrinter(res[0]);
+        }
+      });
     });
   };
 
@@ -41,14 +47,19 @@ export default function App() {
     // works only for android
     if (Platform.OS == 'android') {
       USBPrinter.init().then(() => {
-        USBPrinter.getDeviceList().then(setUsbPrinters);
+        USBPrinter.getDeviceList().then(res => {
+          setUsbPrinters(res);
+          // auto connect to usb printer when app is loading
+          if (res.length !== 0) {
+            connectUsbPrinter(res[0]);
+          }
+        });
       });
     }
   };
 
   // connect to a usb printer
   const connectUsbPrinter = printer => {
-    console.log('printer:', printer);
     USBPrinter.connectPrinter(printer.vendor_id, printer.product_id).then(() =>
       setCurrentUsbPrinter(printer),
     );
