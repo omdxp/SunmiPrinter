@@ -56,6 +56,16 @@ export default function App() {
           </Text>
         </TouchableOpacity>
       ))}
+      <TouchableOpacity
+        style={{
+          backgroundColor: 'red',
+          borderRadius: 30,
+          padding: 5,
+          margin: 5,
+        }}
+        onPress={printTextTest}>
+        <Text style={{color: 'white', fontSize: 30}}>Print Text</Text>
+      </TouchableOpacity>
     </View>
   );
 }
