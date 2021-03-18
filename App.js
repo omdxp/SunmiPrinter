@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, Platform} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Platform,
+  ToastAndroid,
+} from 'react-native';
 import {BLEPrinter, USBPrinter} from 'react-native-thermal-receipt-printer';
 
 export default function App() {
@@ -22,11 +28,12 @@ export default function App() {
   }, []);
 
   // connect to a usb printer
-  const connectUsbPrinter = printer =>
+  const connectUsbPrinter = printer => {
     USBPrinter.connectPrinter(printer.vendorID, printer.productId).then(() =>
       setCurrentUsbPrinter(printer),
     );
-
+    ToastAndroid.show('Connected to a usb printer', ToastAndroid.LONG);
+  };
   // print sample text from usb printer
   const printUsbTextTest = () => {
     currentUsbPrinter && USBPrinter.printText('<C>Hello, World! text</C>\n');
@@ -42,6 +49,7 @@ export default function App() {
     BLEPrinter.connectPrinter(
       printer.inner_mac_address,
     ).then(setCurrentBluetoothPrinter, error => console.warn(error));
+    ToastAndroid.show('Connected to a bluetooth printer', ToastAndroid.LONG);
   };
 
   // print sample text from bluetooth printer
