@@ -6,7 +6,7 @@ import {
   Platform,
   ToastAndroid,
 } from 'react-native';
-import {BLEPrinter, USBPrinter} from 'react-native-thermal-receipt-printer';
+import {BLEPrinter, USBPrinter} from 'react-native-printer';
 
 export default function App() {
   // states
@@ -36,7 +36,7 @@ export default function App() {
   };
   // print sample text from usb printer
   const printUsbTextTest = () => {
-    currentUsbPrinter && USBPrinter.printText('<C>Hello, World! text</C>\n');
+    currentUsbPrinter && USBPrinter.printText('<CB>Hello, World!</CB>\n');
   };
 
   // print bill from usb printer
@@ -55,13 +55,49 @@ export default function App() {
   // print sample text from bluetooth printer
   const printBluetoothTextTest = () => {
     currentBluetoothPrinter &&
-      BLEPrinter.printText('<C>Hello, World! text</C>\n');
+      BLEPrinter.printText('<C><B>Hello, World!</B></C>\n');
   };
 
   // print bill from bluetooth printer
   const printBluetoothBillTest = () => {
     currentBluetoothPrinter &&
       BLEPrinter.printBill('<C>Hello, World! bill</C>');
+  };
+
+  // print sample bill with custom inputs
+  const printBluetoothBillSample = (
+    storeName,
+    address,
+    phoneNumber,
+    productsList,
+    collectedAmount,
+    discount,
+    charge,
+    total,
+    ticketNumber,
+    thanks,
+    numberOfCopies,
+  ) => {
+    const line = '<C>--------------------------------------------</C>\n';
+    const date = new Date().toLocaleString('fr-fr');
+    for (let i = 0; i < numberOfCopies; i++) {
+      BLEPrinter.printBill(
+        `<CB>${storeName}</CB>\n` +
+          `<CM>${address}</CM>\n` +
+          `<CM>${phoneNumber}</CM>\n` +
+          line +
+          `${productsList.map(product => `* ${product} DA\n`)}` +
+          line +
+          `Collected Amount : ${collectedAmount} DA\n` +
+          `Discount : ${discount} DA\n` +
+          `Charge : ${charge} DA\n` +
+          `<CD>Total : ${total} DA</CD>\n` +
+          line +
+          `Ticket Number : #${ticketNumber}\n` +
+          `${date}\n` +
+          `<CM>${thanks}</CM>\n`,
+      );
+    }
   };
 
   return (
@@ -153,6 +189,34 @@ export default function App() {
             }}
             onPress={printBluetoothBillTest}>
             <Text style={{color: 'white', fontSize: 30}}>Print Bill Text</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: 'red',
+              borderRadius: 30,
+              padding: 5,
+              margin: 5,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onPress={() =>
+              printBluetoothBillSample(
+                'Omar Store', // storeName
+                'Mesra, Mostaganem', // address
+                '04516564545', // phoneNumber
+                ['Batata : 200.0', 'Khobz : 10.0', 'Dela3 : 300.0'], // productsList
+                '5600', // collectedAmount
+                '0.0', // discount
+                '0.0', // charge
+                '5600', // total
+                '1125', // ticketNumber
+                'Merci pour votre achat', // thanks
+                1,
+              )
+            }>
+            <Text style={{color: 'white', fontSize: 30}}>
+              Print Sample Bill
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
