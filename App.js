@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Platform,
   ToastAndroid,
+  Button,
 } from 'react-native';
 import {BLEPrinter, USBPrinter} from 'react-native-printer';
 
@@ -29,7 +30,8 @@ export default function App() {
 
   // connect to a usb printer
   const connectUsbPrinter = printer => {
-    USBPrinter.connectPrinter(printer.vendorID, printer.productId).then(() =>
+    console.log('printer:', printer);
+    USBPrinter.connectPrinter(printer.vendor_id, printer.product_id).then(() =>
       setCurrentUsbPrinter(printer),
     );
     ToastAndroid.show('Connected to a usb printer', ToastAndroid.LONG);
@@ -78,7 +80,7 @@ export default function App() {
     thanks,
     numberOfCopies,
   ) => {
-    const line = '<C>--------------------------------------------</C>\n';
+    const line = '<C>-------------------------------  -----------------</C>\n';
     const date = new Date().toLocaleString('fr-fr');
     for (let i = 0; i < numberOfCopies; i++) {
       BLEPrinter.printBill(
@@ -127,6 +129,19 @@ export default function App() {
             padding: 10,
             borderRadius: 20,
           }}>
+          <Button
+            title={'refresh'}
+            onPress={() => {
+              BLEPrinter.init().then(() => {
+                BLEPrinter.getDeviceList().then(setBluetoothPrinters);
+              });
+              if (Platform.OS == 'android') {
+                USBPrinter.init().then(() => {
+                  USBPrinter.getDeviceList().then(setUsbPrinters);
+                });
+              }
+            }}
+          />
           <View style={{flex: 1}}>
             <Text style={{color: 'white', fontSize: 50}}>
               List of bluetooth devices
@@ -222,7 +237,7 @@ export default function App() {
                 '5600', // total
                 '1125', // ticketNumber
                 'Merci pour votre achat', // thanks
-                3,
+                2,
               )
             }>
             <Text style={{color: 'white', fontSize: 30}}>
